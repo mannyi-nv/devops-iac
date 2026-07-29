@@ -17,10 +17,16 @@ provider "aws" {
 }
 
 provider "aws" {
-  
+  alias      = "us-west-2"
+  region     = "us-west-2"
+  access_key = var.key
+  secret_key = var.secret
+  token      = var.token
+}
+
+provider "aws" {
   alias      = "us-east-1"
   region     = "us-east-1"
-  
   access_key = var.key
   secret_key = var.secret
   token      = var.token
