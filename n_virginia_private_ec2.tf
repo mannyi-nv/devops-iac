@@ -1,8 +1,9 @@
 resource "aws_instance" "VRG-EC2-1-private-windows" {
+  provider          = aws.us-east-1
   ami               = local.ami_ids.us-east-1.windows
-  availability_zone = aws_subnet.private-subnet[0].availability_zone
+  availability_zone = aws_subnet.n_virginia_private[0].availability_zone
   instance_type     = var.instance_type
-  subnet_id         = aws_subnet.private-subnet[0].id
+  subnet_id         = aws_subnet.n_virginia_private[0].id
   key_name          = var.vrg_key_name
   user_data_replace_on_change = true
   user_data         = local.windows_user_data
@@ -15,9 +16,10 @@ resource "aws_instance" "VRG-EC2-1-private-windows" {
 }
 
 resource "aws_security_group" "n_virginia_allow_public_rdp_http_sg" {
+  provider    = aws.us-east-1
   name        = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-private-allow_rdp_sg"
   description = "Allow RDP inbound traffic"
-  vpc_id      = aws_vpc.main-vpc.id
+  vpc_id      = aws_vpc.second-vpc.id
 
   tags = {
     Name = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-private-allow_rdp_sg"
@@ -27,14 +29,14 @@ resource "aws_security_group" "n_virginia_allow_public_rdp_http_sg" {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = ["10.21.50.0/24"]
+    cidr_blocks = [var.n_virginia_vpc_dev_cidr_block]
   }
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.21.50.0/24"]
+    cidr_blocks = [var.n_virginia_vpc_dev_cidr_block]
   }
 
   egress {
@@ -47,10 +49,11 @@ resource "aws_security_group" "n_virginia_allow_public_rdp_http_sg" {
 }
 
 resource "aws_instance" "VRG-EC2-2-private-linux" {
+  provider          = aws.us-east-1
   ami               = local.ami_ids.us-east-1.linux
-  availability_zone = aws_subnet.private-subnet[0].availability_zone
+  availability_zone = aws_subnet.n_virginia_private[0].availability_zone
   instance_type     = var.instance_type
-  subnet_id         = aws_subnet.private-subnet[0].id
+  subnet_id         = aws_subnet.n_virginia_private[0].id
   key_name          = var.vrg_key_name
   user_data_replace_on_change = true
   user_data         = local.linux_user_data
@@ -65,9 +68,10 @@ resource "aws_instance" "VRG-EC2-2-private-linux" {
 }
 
 resource "aws_security_group" "n_virginia_allow_public_ssh_http_sg" {
+  provider    = aws.us-east-1
   name        = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-public-allow_ssh_sg"
   description = "Allow SSH inbound traffic"
-  vpc_id      = aws_vpc.main-vpc.id
+  vpc_id      = aws_vpc.second-vpc.id
 
   tags = {
     Name = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-public-allow_ssh_sg"
@@ -77,14 +81,14 @@ resource "aws_security_group" "n_virginia_allow_public_ssh_http_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.21.50.0/24"]
+    cidr_blocks = [var.n_virginia_vpc_dev_cidr_block]
   }
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.21.50.0/24"]
+    cidr_blocks = [var.n_virginia_vpc_dev_cidr_block]
   }
 
   egress {

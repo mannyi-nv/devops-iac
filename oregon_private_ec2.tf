@@ -1,8 +1,8 @@
 resource "aws_instance" "ORG-EC2-1-private-windows" {
   ami               = local.ami_ids.us-west-2.windows
-  availability_zone = aws_subnet.private-subnet[0].availability_zone
+  availability_zone = aws_subnet.oregon_private[0].availability_zone
   instance_type     = var.instance_type
-  subnet_id         = aws_subnet.private-subnet[0].id
+  subnet_id         = aws_subnet.oregon_private[0].id
   key_name          = var.org_key_name
   user_data_replace_on_change = true
   user_data         = local.windows_user_data
@@ -27,14 +27,14 @@ resource "aws_security_group" "oregon_allow_public_rdp_http_sg" {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = ["10.20.50.0/24"]
+    cidr_blocks = [var.oregon_vpc_dev_cidr_block]
   }
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.20.50.0/24"]
+    cidr_blocks = [var.oregon_vpc_dev_cidr_block]
   }
 
   egress {
@@ -48,9 +48,9 @@ resource "aws_security_group" "oregon_allow_public_rdp_http_sg" {
 
 resource "aws_instance" "ORG-EC2-2-private-linux" {
   ami               = local.ami_ids.us-west-2.linux
-  availability_zone = aws_subnet.private-subnet[0].availability_zone
+  availability_zone = aws_subnet.oregon_private[0].availability_zone
   instance_type     = var.instance_type
-  subnet_id         = aws_subnet.private-subnet[0].id
+  subnet_id         = aws_subnet.oregon_private[0].id
   key_name          = var.org_key_name
   user_data_replace_on_change = true
   user_data         = local.linux_user_data
@@ -75,14 +75,14 @@ resource "aws_security_group" "oregon_allow_public_ssh_http_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["10.20.50.0/24"]
+    cidr_blocks = [var.oregon_vpc_dev_cidr_block]
   }
 
   ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = ["10.20.50.0/24"]
+    cidr_blocks = [var.oregon_vpc_dev_cidr_block]
   }
 
   egress {

@@ -1,6 +1,6 @@
 resource "aws_instance" "ORG-EC2-1-public" {
   ami                         = local.ami_ids.us-west-2.windows
-  availability_zone           = aws_subnet.private-subnet[0].availability_zone
+  availability_zone           = aws_subnet.ORG-public-subnet[0].availability_zone
   instance_type               = var.instance_type
   subnet_id                   = aws_subnet.ORG-public-subnet[0].id
   key_name                    = var.org_key_name
@@ -27,7 +27,7 @@ resource "aws_security_group" "oregon_allow_public_rdp_sg" {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = [".0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {

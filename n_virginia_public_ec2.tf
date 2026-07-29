@@ -1,6 +1,7 @@
 resource "aws_instance" "VRG-EC2-1-public" {
+  provider                    = aws.us-east-1
   ami                         = local.ami_ids.us-east-1.windows
-  availability_zone           = aws_subnet.private-subnet[0].availability_zone
+  availability_zone           = aws_subnet.VRG-public-subnet[0].availability_zone
   instance_type               = var.instance_type
   subnet_id                   = aws_subnet.VRG-public-subnet[0].id
   key_name                    = var.vrg_key_name
@@ -15,9 +16,10 @@ resource "aws_instance" "VRG-EC2-1-public" {
 }
 
 resource "aws_security_group" "n_virginia_allow_public_rdp_sg" {
+  provider    = aws.us-east-1
   name        = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-allow_rdp_sg"
   description = "Allow RDP inbound traffic"
-  vpc_id      = aws_vpc.main-vpc.id
+  vpc_id      = aws_vpc.second-vpc.id
 
   tags = {
     Name = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-allow_rdp_sg"
@@ -27,7 +29,7 @@ resource "aws_security_group" "n_virginia_allow_public_rdp_sg" {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = ["10.20.0.0/24"]
+    cidr_blocks = [var.oregon_vpc_dev_cidr_block]
   }
 
   egress {

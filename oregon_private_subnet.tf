@@ -23,7 +23,7 @@ resource "aws_route_table" "oregon_private" {
 
 resource "aws_route_table_association" "oregon_private" {
   count          = var.private_subnet_counts
-  subnet_id      = aws_subnet.private-subnet[count.index].id
+  subnet_id      = aws_subnet.oregon_private[count.index].id
   route_table_id = aws_route_table.oregon_private.id
 }
 

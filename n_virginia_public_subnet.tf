@@ -1,6 +1,7 @@
 resource "aws_subnet" "VRG-public-subnet" {
+  provider   = aws.us-east-1
   count      = var.public_subnet_counts
-  vpc_id     = aws_vpc.main-vpc.id
+  vpc_id     = aws_vpc.second-vpc.id
   cidr_block = cidrsubnet(var.n_virginia_vpc_dev_cidr_block, 8, 50 + count.index)
 
   tags = {
@@ -10,7 +11,8 @@ resource "aws_subnet" "VRG-public-subnet" {
 }
 
 resource "aws_internet_gateway" "n_virginia_public" {
-  vpc_id = aws_vpc.main-vpc.id
+  provider = aws.us-east-1
+  vpc_id   = aws_vpc.second-vpc.id
 
   tags = {
     Name = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-igw"
@@ -18,7 +20,8 @@ resource "aws_internet_gateway" "n_virginia_public" {
 }
 
 resource "aws_eip" "n_virginia_nat" {
-  domain = "vpc"
+  provider = aws.us-east-1
+  domain   = "vpc"
 
   tags = {
     Name = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-nat-eip"
@@ -26,6 +29,7 @@ resource "aws_eip" "n_virginia_nat" {
 }
 
 resource "aws_nat_gateway" "n_virginia_nat" {
+  provider      = aws.us-east-1
   allocation_id = aws_eip.n_virginia_nat.id
   subnet_id     = aws_subnet.VRG-public-subnet[0].id
 
@@ -37,7 +41,8 @@ resource "aws_nat_gateway" "n_virginia_nat" {
 }
 
 resource "aws_route_table" "n_virginia_public" {
-  vpc_id = aws_vpc.main-vpc.id
+  provider = aws.us-east-1
+  vpc_id   = aws_vpc.second-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -51,7 +56,8 @@ resource "aws_route_table" "n_virginia_public" {
 }
 
 resource "aws_route_table_association" "n_virginia_public" {
-  count          = var.public_subnet_counts
-  subnet_id      = aws_subnet.VRG-public-subnet[count.index].id
-  route_table_id = aws_route_table.n_virginia_public.id
+  provider        = aws.us-east-1
+  count           = var.public_subnet_counts
+  subnet_id       = aws_subnet.VRG-public-subnet[count.index].id
+  route_table_id  = aws_route_table.n_virginia_public.id
 }
