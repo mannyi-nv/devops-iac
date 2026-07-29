@@ -10,15 +10,17 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region     = var.main_region
+  region     = "us-west-2"
   access_key = var.key
   secret_key = var.secret
   token      = var.token
 }
 
 provider "aws" {
+  
   alias      = "us-east-1"
-  region     = var.secondary_region
+  region     = "us-east-1"
+  
   access_key = var.key
   secret_key = var.secret
   token      = var.token

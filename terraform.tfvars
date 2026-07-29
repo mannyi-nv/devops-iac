@@ -1,11 +1,12 @@
 # Overwrite region variable for AWS provider
 
-main_region      = "us-west-2"
-secondary_region = "us-east-1"
+Oregon_region = "us-west-2"
+n_virginia_region = "us-east-1"
 
 # Overwrite subnet variables in variables.tf
 
-subnet_counts = 2
+public_subnet_counts = 3
+private_subnet_counts = 2
 
 # Set instance type for EC2 instance
 
