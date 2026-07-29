@@ -1,7 +1,8 @@
 resource "aws_subnet" "oregon_private" {
-  count      = var.private_subnet_counts
-  vpc_id     = aws_vpc.main-vpc.id
-  cidr_block = cidrsubnet(var.oregon_vpc_dev_cidr_block, 8, 101 + count.index)
+  count             = var.private_subnet_counts
+  vpc_id            = aws_vpc.main-vpc.id
+  availability_zone = var.org_use2_zone_a
+  cidr_block        = cidrsubnet(var.oregon_vpc_dev_cidr_block, 8, 101 + count.index)
 
   tags = {
     Name = "${var.dev_env_type}-${var.Oregon_region}-${var.env_name}-Private-${count.index + 101}-Subnet"

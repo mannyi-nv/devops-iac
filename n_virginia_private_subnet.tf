@@ -1,8 +1,9 @@
 resource "aws_subnet" "n_virginia_private" {
-  provider   = aws.us-east-1
-  count      = var.private_subnet_counts
-  vpc_id     = aws_vpc.second-vpc.id
-  cidr_block = cidrsubnet(var.n_virginia_vpc_dev_cidr_block, 8, 101 + count.index)
+  provider          = aws.us-east-1
+  count             = var.private_subnet_counts
+  vpc_id            = aws_vpc.second-vpc.id
+  availability_zone = var.vrg_use1_zone_a
+  cidr_block        = cidrsubnet(var.n_virginia_vpc_dev_cidr_block, 8, 101 + count.index)
 
   tags = {
     Name = "${var.dev_env_type}-${var.n_virginia_region}-${var.env_name}-Private-${count.index + 101}-Subnet"

@@ -129,8 +129,13 @@ variable "n_virginia_region" {
 
 variable "vrg_use1_zone_a" {
   # Value here will be filled by terraform.tfvars file
-  type      = string
+  type    = string
   default = "us-east-1a"
+}
+
+variable "org_use2_zone_a" {
+  type    = string
+  default = "us-west-2a"
 }
 
 variable "vrg_key_name" {
